@@ -1,0 +1,39 @@
+---
+# list of tasks to perform to run a Sonic VM BGP topology
+
+  - name: 'Prepare the host machine'
+    hosts: deploy_machine
+    roles: 
+        - deploy_sonic_vms
+
+  - name: 'Test vm machine connection'
+    hosts: virtual_machines
+    tasks:
+      - name: Ping the vms
+        ping:
+        
+  - name: 'Generate the config for the switches'
+    hosts: deploy_machine
+    roles:
+      - configure-bgp-one-to-one 
+
+  - name: 'Copy the configs, reboot the swithches and check bgp connectivity'
+    hosts: virtual_machines
+    tasks:
+      - name: 'Save a backup of the config'
+        copy:
+          src: "/etc/sonic/config_db.json"
+          dest: "/etc/sonic/config_db.json.backup"
+          remote_src: true
+        become: true
+      - name: 'Copy the proper config files'
+        copy:
+          src: "{{hostvars['deploy_machine']['working_directory'] + '/' + inventory_hostname + '.conf'}}"
+          dest: "/etc/sonic/config_db.json"
+        become: true
+      - name: 'Reboot the switch'
+        reboot:
+        become: true
+      
+
+    

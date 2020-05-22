@@ -1,0 +1,32 @@
+#!/usr/bin/expect -f
+
+set port [lindex $argv 0];
+spawn telnet 127.0.0.1 $port
+set timeout 5
+send "\r"
+expect "login: "
+send "admin\r"
+set timeout 10
+expect "Password: "
+send "admin\r"
+
+#expect ":~$ "
+#send "show interface status\r"
+
+expect ":~$ "
+set ip [lindex $argv 1];
+set mask [lindex $argv 2];
+sleep 2
+send "sudo /sbin/ifconfig eth0 $ip/$mask up\r"
+expect ":~$ "
+send "sudo /sbin/ifconfig eth0 \r"
+expect ":~$ "
+sleep 1
+send "sudo /sbin/ifconfig eth0 \r"
+expect ":~$ "
+sleep 3
+send "\x1b\r"
+expect "telnet>"
+sleep 5
+send "close\r"
+close $spawn_id 

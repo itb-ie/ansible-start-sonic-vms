@@ -1,0 +1,442 @@
+inainte:  /export/local/bratiu/ansible_start_vms/inventory 
+dupa: /export/local/bratiu/ansible_start_vms/inventory
+Am inventarul:
+ {'_meta': {'hostvars': {'deploy_machine': {'ansible_connection': 'local', 'data_file': 'sonic-if-data-script', 'deploy_ip': '10.241.7.192', 'mgmt_file': 'sonic-if-mgmt-script', 'nr_ifs': 10, 'path_to_qcow': '/export/local/bratiu', 'qcow_name': 'sonic_vs.img', 'starting_mac': 'DE:AD:BE:EF:8E:55', 'working_directory': '/export/local/bratiu/setup1'}, 'vm1': {'ansible_connection': 'ssh', 'ansible_host': '10.241.7.200', 'ansible_password': 'admin', 'ansible_ssh_extra_args': '-o StrictHostKeyChecking=no', 'ansible_user': 'admin', 'data_intf_ip': '10.0.0.1', 'data_intf_mask': 24, 'holdtime': 10, 'keepalive': 3, 'local_as': 65100, 'mgmt_gw': '10.241.7.254', 'mgmt_mask': 25, 'telnet_port': 9095}, 'vm2': {'ansible_connection': 'ssh', 'ansible_host': '10.241.7.201', 'ansible_password': 'admin', 'ansible_ssh_extra_args': '-o StrictHostKeyChecking=no', 'ansible_user': 'admin', 'data_intf_ip': '10.0.0.22', 'data_intf_mask': 24, 'holdtime': 10, 'keepalive': 3, 'local_as': 65200, 'mgmt_gw': '10.241.7.254', 'mgmt_mask': 25, 'telnet_port': 9096}}}, 'all': {'children': ['ungrouped', 'virtual_machines']}, 'ungrouped': {'hosts': ['deploy_machine']}, 'virtual_machines': {'hosts': ['vm1', 'vm2']}}
+Am variabilele din deploy machine: {'ansible_connection': 'local', 'data_file': 'sonic-if-data-script', 'deploy_ip': '10.241.7.192', 'mgmt_file': 'sonic-if-mgmt-script', 'nr_ifs': 10, 'path_to_qcow': '/export/local/bratiu', 'qcow_name': 'sonic_vs.img', 'starting_mac': 'DE:AD:BE:EF:8E:55', 'working_directory': '/export/local/bratiu/setup1'}
+Am numarul de vms de pornit: 2
+First config
+{
+   "BGP_NEIGHBOR": {
+       "10.0.0.22": {
+           "rrclient": 0,
+           "name": "peer0",
+           "local_addr": "10.0.0.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       },
+       "10.0.1.22": {
+           "rrclient": 0,
+           "name": "peer1",
+           "local_addr": "10.0.1.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       },
+       "10.0.2.22": {
+           "rrclient": 0,
+           "name": "peer2",
+           "local_addr": "10.0.2.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       },
+       "10.0.3.22": {
+           "rrclient": 0,
+           "name": "peer3",
+           "local_addr": "10.0.3.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       },
+       "10.0.4.22": {
+           "rrclient": 0,
+           "name": "peer4",
+           "local_addr": "10.0.4.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       },
+       "10.0.5.22": {
+           "rrclient": 0,
+           "name": "peer5",
+           "local_addr": "10.0.5.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       },
+       "10.0.6.22": {
+           "rrclient": 0,
+           "name": "peer6",
+           "local_addr": "10.0.6.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       },
+       "10.0.7.22": {
+           "rrclient": 0,
+           "name": "peer7",
+           "local_addr": "10.0.7.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       },
+       "10.0.8.22": {
+           "rrclient": 0,
+           "name": "peer8",
+           "local_addr": "10.0.8.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       },
+       "10.0.9.22": {
+           "rrclient": 0,
+           "name": "peer9",
+           "local_addr": "10.0.9.1",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65200",
+           "keepalive": "3"
+       }
+   },
+   "DEVICE_METADATA": {
+       "localhost": {
+           "hwsku": "Force10-S6000",
+           "hostname": "sonic0",
+           "platform": "x86_64-kvm_x86_64-r0",
+           "mac": "52:54:00:12:34:56",
+           "bgp_asn": "65100",
+           "type": "LeafRouter"
+       }
+   },
+   "DEVICE_NEIGHBOR": {},
+   "LOOPBACK_INTERFACE": {
+       "Loopback0|20.2.0.1/32": {}
+   },
+   "INTERFACE": {
+       "Ethernet0|10.0.0.1/24": {},
+       "Ethernet4|10.0.1.1/24": {},
+       "Ethernet8|10.0.2.1/24": {},
+       "Ethernet12|10.0.3.1/24": {},
+       "Ethernet16|10.0.4.1/24": {},
+       "Ethernet20|10.0.5.1/24": {},
+       "Ethernet24|10.0.6.1/24": {},
+       "Ethernet28|10.0.7.1/24": {},
+       "Ethernet32|10.0.8.1/24": {},
+       "Ethernet36|10.0.9.1/24": {}
+   },
+   "PORT": {
+       "Ethernet0": {
+           "index": "0",
+           "lanes": "25,26,27,28",
+           "mtu": "9100",
+           "alias": "fortyGigE0/0",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet4": {
+           "index": "1",
+           "lanes": "29,30,31,32",
+           "mtu": "9100",
+           "alias": "fortyGigE0/4",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet8": {
+           "index": "2",
+           "lanes": "33,34,35,36",
+           "mtu": "9100",
+           "alias": "fortyGigE0/8",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet12": {
+           "index": "3",
+           "lanes": "37,38,39,40",
+           "mtu": "9100",
+           "alias": "fortyGigE0/12",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet16": {
+           "index": "4",
+           "lanes": "41,42,43,44",
+           "mtu": "9100",
+           "alias": "fortyGigE0/16",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet20": {
+           "index": "5",
+           "lanes": "45,46,47,48",
+           "mtu": "9100",
+           "alias": "fortyGigE0/20",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet24": {
+           "index": "6",
+           "lanes": "49,50,51,52",
+           "mtu": "9100",
+           "alias": "fortyGigE0/24",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet28": {
+           "index": "7",
+           "lanes": "53,54,55,56",
+           "mtu": "9100",
+           "alias": "fortyGigE0/28",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet32": {
+           "index": "8",
+           "lanes": "57,58,59,60",
+           "mtu": "9100",
+           "alias": "fortyGigE0/32",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet36": {
+           "index": "9",
+           "lanes": "61,62,63,64",
+           "mtu": "9100",
+           "alias": "fortyGigE0/36",
+           "admin_status": "up",
+           "speed": "40000"
+       }
+   },
+   "MGMT_INTERFACE": {
+     "eth0|10.241.7.200/25": {
+       "gwaddr": "10.241.7.254"
+     }
+   }
+}
+First config
+{
+   "BGP_NEIGHBOR": {
+       "10.0.0.1": {
+           "rrclient": 0,
+           "name": "peer0",
+           "local_addr": "10.0.0.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       },
+       "10.0.1.1": {
+           "rrclient": 0,
+           "name": "peer1",
+           "local_addr": "10.0.1.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       },
+       "10.0.2.1": {
+           "rrclient": 0,
+           "name": "peer2",
+           "local_addr": "10.0.2.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       },
+       "10.0.3.1": {
+           "rrclient": 0,
+           "name": "peer3",
+           "local_addr": "10.0.3.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       },
+       "10.0.4.1": {
+           "rrclient": 0,
+           "name": "peer4",
+           "local_addr": "10.0.4.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       },
+       "10.0.5.1": {
+           "rrclient": 0,
+           "name": "peer5",
+           "local_addr": "10.0.5.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       },
+       "10.0.6.1": {
+           "rrclient": 0,
+           "name": "peer6",
+           "local_addr": "10.0.6.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       },
+       "10.0.7.1": {
+           "rrclient": 0,
+           "name": "peer7",
+           "local_addr": "10.0.7.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       },
+       "10.0.8.1": {
+           "rrclient": 0,
+           "name": "peer8",
+           "local_addr": "10.0.8.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       },
+       "10.0.9.1": {
+           "rrclient": 0,
+           "name": "peer9",
+           "local_addr": "10.0.9.22",
+           "admin_status" : "up",
+           "nhopself": 0,
+           "holdtime": "10",
+           "asn": "65100",
+           "keepalive": "3"
+       }
+   },
+   "DEVICE_METADATA": {
+       "localhost": {
+           "hwsku": "Force10-S6000",
+           "hostname": "sonic1",
+           "platform": "x86_64-kvm_x86_64-r0",
+           "mac": "52:54:00:12:34:57",
+           "bgp_asn": "65200",
+           "type": "LeafRouter"
+       }
+   },
+   "DEVICE_NEIGHBOR": {},
+   "LOOPBACK_INTERFACE": {
+       "Loopback0|20.2.0.2/32": {}
+   },
+   "INTERFACE": {
+       "Ethernet0|10.0.0.22/24": {},
+       "Ethernet4|10.0.1.22/24": {},
+       "Ethernet8|10.0.2.22/24": {},
+       "Ethernet12|10.0.3.22/24": {},
+       "Ethernet16|10.0.4.22/24": {},
+       "Ethernet20|10.0.5.22/24": {},
+       "Ethernet24|10.0.6.22/24": {},
+       "Ethernet28|10.0.7.22/24": {},
+       "Ethernet32|10.0.8.22/24": {},
+       "Ethernet36|10.0.9.22/24": {}
+   },
+   "PORT": {
+       "Ethernet0": {
+           "index": "0",
+           "lanes": "25,26,27,28",
+           "mtu": "9100",
+           "alias": "fortyGigE0/0",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet4": {
+           "index": "1",
+           "lanes": "29,30,31,32",
+           "mtu": "9100",
+           "alias": "fortyGigE0/4",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet8": {
+           "index": "2",
+           "lanes": "33,34,35,36",
+           "mtu": "9100",
+           "alias": "fortyGigE0/8",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet12": {
+           "index": "3",
+           "lanes": "37,38,39,40",
+           "mtu": "9100",
+           "alias": "fortyGigE0/12",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet16": {
+           "index": "4",
+           "lanes": "41,42,43,44",
+           "mtu": "9100",
+           "alias": "fortyGigE0/16",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet20": {
+           "index": "5",
+           "lanes": "45,46,47,48",
+           "mtu": "9100",
+           "alias": "fortyGigE0/20",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet24": {
+           "index": "6",
+           "lanes": "49,50,51,52",
+           "mtu": "9100",
+           "alias": "fortyGigE0/24",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet28": {
+           "index": "7",
+           "lanes": "53,54,55,56",
+           "mtu": "9100",
+           "alias": "fortyGigE0/28",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet32": {
+           "index": "8",
+           "lanes": "57,58,59,60",
+           "mtu": "9100",
+           "alias": "fortyGigE0/32",
+           "admin_status": "up",
+           "speed": "40000"
+       },
+       "Ethernet36": {
+           "index": "9",
+           "lanes": "61,62,63,64",
+           "mtu": "9100",
+           "alias": "fortyGigE0/36",
+           "admin_status": "up",
+           "speed": "40000"
+       }
+   },
+   "MGMT_INTERFACE": {
+     "eth0|10.241.7.201/25": {
+       "gwaddr": "10.241.7.254"
+     }
+   }
+}

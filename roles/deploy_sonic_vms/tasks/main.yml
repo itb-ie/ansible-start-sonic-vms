@@ -1,0 +1,97 @@
+---
+# tasks file for deploy-sonic-vms
+#- name: Print a debug message
+#  debug:
+#    msg: Am variablila {{path_to_qcow}} si {{groups['virtual_machines'] | length}} si working directory {{working_directory}} {{role_path}} {{ansible_inventory_sources}}
+
+- name: Retrieve working directory state
+  stat:
+      path: "{{working_directory}}"
+  register: directory_state
+
+# comment this for now
+# - name: Abort if directory already exists
+#  fail:
+#    msg: Directory {{working_directory}} already exists. Please stop the playbook before starting again, or use another inventory
+#  when: directory_state.stat.exists == true
+- name: Create the working directory
+  file:
+    path: "{{working_directory}}"
+    state: directory
+
+- name: Copy the qcow to the directory {{working_directory}}
+  copy:
+     src: "{{path_to_qcow}}/{{qcow_name}}"  
+     dest: "{{working_directory}}/{{item}}.img"
+     force: no
+  loop: "{{groups['virtual_machines']}}"
+
+- name: Copy the 2 Scripts to {{working_directory}}
+  copy:
+    src: "{{item}}"
+    dest: "{{working_directory}}"
+    mode: 750
+    force: no
+  loop:
+    - sonic-if-mgmt-script
+    - sonic-if-data-script
+
+- name: Make sure that kvm and qemu are installed (also added python3 to not have to care about unicode conversions)
+  yum:
+    name: "{{packages}}"
+    state: present
+  vars:
+    packages:
+      - qemu-kvm
+      - qemu
+      - python3
+      - expect
+
+- name: Install python3 dependencies
+  pip:
+    name:
+      - sh
+      - ansible
+    executable: /usr/bin/pip3
+        
+
+- name: Create the symbolic link for kvm
+  file:
+    src: /usr/libexec/qemu-kvm
+    dest: /usr/bin/kvm
+    state: link
+
+#- name: Create the linux bridge (not sure if we need it)
+#  shell: brctl addbr br1
+
+- name: Invoke the python script to generate the startup vm commands (send the inventory file as input)
+  script:
+    cmd: "{{role_path}}/scripts/generate_commands.py {{ansible_inventory_sources}}"
+  register: script_output
+
+
+#- name: Print the output
+#  debug:
+#    msg: "Am mesajul: {{item}}"
+#  loop: "{{script_output.stdout}}"
+
+- name: Launch the VMs
+  become: true
+  shell:
+    chdir: "{{working_directory}}"
+    cmd: "{{item}}"
+  loop: "{{script_output.stdout}}"
+
+
+#- name: Debug some stuff
+#  debug:
+#    msg:
+#      - "afisez  {{hostvars[item]['ansible_host']}}"
+#  loop: "{{groups['virtual_machines']}}"
+
+- name: Execute the expect script to put the mgmt ips via telnet
+  shell:
+    cmd: "expect {{role_path}}/scripts/set_management_ip {{hostvars[item]['telnet_port']}} {{hostvars[item]['ansible_host']}} 25"
+  loop: "{{groups['virtual_machines']}}"
+
+

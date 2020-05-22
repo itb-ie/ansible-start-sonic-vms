@@ -1,0 +1,47 @@
+
+all:
+    hosts:
+        deploy_machine:
+            ansible_connection: local
+            deploy_ip: 10.241.7.192
+            path_to_qcow: /export/local/bratiu
+            qcow_name: sonic_vs.img  
+            working_directory: /export/local/bratiu/setup1
+            starting_mac: DE:AD:BE:EF:8E:11 # rest of the interfaces will be mac+1, for more devices start from this +100 per device
+            nr_ifs: 20 # the number of interfaces (will add one extra for management)
+            mgmt_file: sonic-if-mgmt-script
+            data_file: sonic-if-data-script
+
+    children:
+        virtual_machines:
+            hosts:
+                vm1:
+                    ansible_connection: ssh
+                    ansible_host: 10.241.7.200
+                    mgmt_mask: 25
+                    mgmt_gw: 10.241.7.254
+                    ansible_user: admin
+                    ansible_password: admin
+                    ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
+                    telnet_port: 9095
+                    data_intf_ip: 10.0.0.1
+                    data_intf_mask: 24
+                    local_as: 65100
+                    holdtime: 10
+                    keepalive: 3
+                vm2:
+                    ansible_connection: ssh
+                    ansible_host: 10.241.7.201
+                    mgmt_mask: 25
+                    mgmt_gw: 10.241.7.254
+                    ansible_user: admin
+                    ansible_password: admin
+                    ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
+                    telnet_port: 9096
+                    data_intf_ip: 10.0.0.22
+                    data_intf_mask: 24
+                    local_as: 65200
+                    holdtime: 10
+                    keepalive: 3
+
+

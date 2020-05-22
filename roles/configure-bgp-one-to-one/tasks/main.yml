@@ -1,0 +1,19 @@
+---
+# tasks file for configure-bgp-one-to-one
+
+- name: Invoke the python script to generate the proper config for the sonic vms
+  script:
+    cmd: "{{role_path}}/scripts/generate_configs.py {{ansible_inventory_sources}}"
+  register: script_output
+
+- name: Check that the files have been generated
+  stat:
+    path: "{{working_directory + '/' + item + '.conf'}}"
+  loop: "{{groups['virtual_machines']}}"
+  register: stats
+  
+- name: Fail if file not there
+  fail:
+     msg: "Could not find the file {{item.stat.path}}"
+  when: "not item.stat.exists"
+  loop: "{{stats.results}}"
